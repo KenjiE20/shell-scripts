@@ -40,7 +40,7 @@ echo ""
 echo "Applying $patch_nomod"
 patch -p0 < patches/$patch_nomod
 echo ""
-read -p "Continue? (y/n) [y] > " ans
+read -t 10 -p "Continue? (y/n) [y] > " ans
 if [[ "$ans" == "N" || "$ans" == "No" || "$ans" == "n" || "$ans" == "no" ]]; then
 	echo ""
 	echo "Aborting. patch $patch_nomod failed."
@@ -53,7 +53,7 @@ echo ""
 echo "Applying $patch_bb2"
 patch -p0 < patches/$patch_bb2
 echo ""
-read -p "Continue? (y/n) [y] > " ans
+read -t 10 -p "Continue? (y/n) [y] > " ans
 if [[ "$ans" == "N" || "$ans" == "No" || "$ans" == "n" || "$ans" == "no" ]]; then
 	echo ""
 	echo "Aborting. patch $patch_bb2 failed."
@@ -66,7 +66,7 @@ echo ""
 echo "Applying $patch_magicbull"
 patch -p0 < patches/$patch_magicbull
 echo ""
-read -p "Continue? (y/n) [y] > " ans
+read -t 10 -p "Continue? (y/n) [y] > " ans
 if [[ "$ans" == "N" || "$ans" == "No" || "$ans" == "n" || "$ans" == "no" ]]; then
 	echo ""
 	echo "Aborting. patch $patch_magicbull failed"
