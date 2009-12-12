@@ -1,0 +1,68 @@
+#! /bin/bash
+
+if [ $# -eq 1 ]; then
+	name=$1
+	echo "-------------------------"
+	echo "|  SVN / TRAC creation  |"
+	echo "-------------------------"
+	echo "This will create an svn repository and trac environment by performing:"
+	echo "svnadmin create $HOME/svn-repos/$name"
+	echo "trac-admin $HOME/trac-env/$name initenv"
+	echo "trac-admin $HOME/trac-env/$name permission add kenji TRAC_ADMIN"
+	echo ""
+	read -p "Continue? (y/n) > " ans
+	if [[ "$ans" != "Y" && "$ans" != "Yes" && "$ans" != "y" && "$ans" != "yes" ]]; then
+		echo ""
+		echo "Aborting. No actions performed"
+		exit 1
+	fi
+	echo ""
+	echo "Running \"svnadmin create $HOME/svn-repos/$name\""
+	svnadmin create $HOME/svn-repos/$name
+	echo ""
+	echo "Running \"trac-admin $HOME/trac-env/$name initenv\""
+	echo "If svnadmin flagged an error, abort now"
+	read -t 10 -p "Abort? (y/n) > " ans
+	if [[ "$ans" == "Y" || "$ans" == "Yes" || "$ans" == "y" || "$ans" == "yes" ]]; then
+		echo ""
+		echo "Aborting. svnadmin abort point"
+		echo ""
+		echo "Removing $HOME/svn-repos/$name"
+		rm -rfd $HOME/svn-repos/$name
+		exit 1
+	fi
+	echo ""
+	trac-admin $HOME/trac-env/$name initenv $name sqlite:db/trac.db svn $HOME/svn-repos/$name
+	echo ""
+	echo "Modifying permissions to 775 / 664"
+	echo "If trac-admin was not completed, abort now"
+	read -t 10 -p "Abort? (y/n) > " ans
+	if [[ "$ans" == "Y" || "$ans" == "Yes" || "$ans" == "y" || "$ans" == "yes" ]]; then
+		echo ""
+		echo "Aborting. trac-admin abort point"
+		echo ""
+		echo "Removing $HOME/svn-repos/$name"
+		rm -rfd $HOME/svn-repos/$name
+		echo "Removing $HOME/trac-env/$name"
+		rm -rfd $HOME/trac-env/$name
+		exit 1
+	fi
+	echo ""
+	find svn-repos -type f -exec chmod --quiet 664 {} \;
+	find svn-repos -type d -exec chmod --quiet 775 {} \;
+	find trac-env -type f -exec chmod --quiet 664 {} \;
+	find trac-env -type d -exec chmod --quiet 775 {} \;
+	echo "Permissions changed"
+	echo "Running \"trac-admin $HOME/trac-env/$name permission add kenji TRAC_ADMIN\""
+	trac-admin $HOME/trac-env/$name permission add kenji TRAC_ADMIN
+	echo ""
+	echo "Applying addglobal.patch to $HOME/trac-env/$name/conf/trac.ini"
+	echo ""
+	patch $HOME/trac-env/$name/conf/trac.ini addglobal.patch
+	echo ""
+	echo "Script finished"
+else
+	echo "Usage: $0 [name]"
+	echo "Ex: $0 myproj"
+	exit 1
+fi

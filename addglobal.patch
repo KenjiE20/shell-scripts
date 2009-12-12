@@ -1,0 +1,16 @@
+24,29c24,29
+< [header_logo]
+< alt = (please configure the [header_logo] section in trac.ini)
+< height = -1
+< link = 
+< src = site/your_project_logo.png
+< width = -1
+---
+> # [header_logo]
+> # alt = (please configure the [header_logo] section in trac.ini)
+> # height = -1
+> # link = 
+> # src = site/your_project_logo.png
+> # width = -1
+33a34
+> file = /home/trac/tracglobals/conf/trac.ini
