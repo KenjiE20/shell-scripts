@@ -3,7 +3,7 @@
 dstamp=$(date +%c) # Get a timestamp
 
 # Space seperated list of paths to clean
-paths=(/media/scratch /media/store /media/shares)
+paths=(/media/scratch /media/shares /media/store/ISO /media/store/hidden)
 
 # Log files
 thum_file="/tmp/thumbs_log"
