@@ -20,8 +20,8 @@ if [ $# -eq 1 ]; then
 	echo "Running \"svnadmin create $HOME/svn-repos/$name\""
 	svnadmin create $HOME/svn-repos/$name
 	echo ""
-	echo "Running \"trac-admin $HOME/trac-env/$name initenv\""
 	echo "If svnadmin flagged an error, abort now"
+	ans="n"
 	read -t 10 -p "Abort? (y/n) > " ans
 	if [[ "$ans" == "Y" || "$ans" == "Yes" || "$ans" == "y" || "$ans" == "yes" ]]; then
 		echo ""
@@ -32,9 +32,9 @@ if [ $# -eq 1 ]; then
 		exit 1
 	fi
 	echo ""
+	echo "Running \"trac-admin $HOME/trac-env/$name initenv\""
 	trac-admin $HOME/trac-env/$name initenv $name sqlite:db/trac.db svn $HOME/svn-repos/$name
 	echo ""
-	echo "Modifying permissions to 775 / 664"
 	echo "If trac-admin was not completed, abort now"
 	read -t 10 -p "Abort? (y/n) > " ans
 	if [[ "$ans" == "Y" || "$ans" == "Yes" || "$ans" == "y" || "$ans" == "yes" ]]; then
@@ -48,6 +48,7 @@ if [ $# -eq 1 ]; then
 		exit 1
 	fi
 	echo ""
+	echo "Modifying permissions to 775 / 664"
 	find svn-repos -type f -exec chmod --quiet 664 {} \;
 	find svn-repos -type d -exec chmod --quiet 775 {} \;
 	find trac-env -type f -exec chmod --quiet 664 {} \;
